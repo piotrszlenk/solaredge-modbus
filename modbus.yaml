@@ -1,0 +1,34 @@
+modbus:
+  - name: "solaredge8k"
+    host: 10.90.11.30
+    delay: 0
+    timeout: 2
+    retries: 0
+    message_wait_milliseconds: 30
+    close_comm_on_error: false
+    type: tcp
+    port: 1502
+    sensors:
+      - name: solaredge_modbus_ac_power_output_w_scale_factor
+        address: 40083
+        count: 2
+        input_type: holding
+        scan_interval: 5
+        data_type: custom
+        slave: 1
+        structure: ">2h"
+
+      - name: solaredge_modbus_status
+        address: 40107
+        count: 1
+        data_type: int
+        slave: 1
+        scan_interval: 5
+
+      - name: solaredge_modbus_active_total_energy_w_scale_factor
+        address: 40093
+        count: 3
+        slave: 1
+        scan_interval: 5
+        data_type: custom
+        structure: ">IH"

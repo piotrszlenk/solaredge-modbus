@@ -1,0 +1,39 @@
+template:
+  sensor:
+    - name: "solaredge_modbus_active_total_energy"
+      unit_of_measurement: "kWh"
+      state_class: total_increasing
+      device_class: energy
+      state: >
+        {% set data = states('sensor.solaredge_modbus_active_total_energy_w_scale_factor').split(',') %}
+        {{ ((data[0]|int * 10**data[1]|int)|round(2))/1000 }}
+
+    - name: "solaredge_modbus_ac_power_output"
+      unit_of_measurement: "W"
+      state_class: measurement
+      device_class: power
+      state: >
+        {% set data = states('sensor.solaredge_modbus_ac_power_output_w_scale_factor').split(',') %}
+        {{ (data[0]|int * 10**data[1]|int)|round(2) }}
+
+    - name: "solaredge_modbus_inverter_status"
+      state: >-
+        {% if states('sensor.solaredge_modbus_status')|int == 1 %}
+          Off
+        {% elif states('sensor.solaredge_modbus_status')|int == 2 %}
+          Sleep
+        {% elif states('sensor.solaredge_modbus_status')|int == 3 %}
+          Wake-Up
+        {% elif states('sensor.solaredge_modbus_status')|int == 4 %}
+          Working
+        {% elif states('sensor.solaredge_modbus_status')|int == 5 %}
+          Throttled
+        {% elif states('sensor.solaredge_modbus_status')|int == 6 %}
+          Shut-Down
+        {% elif states('sensor.solaredge_modbus_status')|int == 7 %}
+          Fault
+        {% elif states('sensor.solaredge_modbus_status')|int == 8 %}
+          Maintenance
+        {% else %}
+          Unknown
+        {% endif %}
